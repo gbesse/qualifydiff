@@ -52,6 +52,15 @@ try {
     );
     assert.equal(await page.locator('#notice').textContent(), message('userNotice', locale));
     assert.equal(await page.locator('#fields input').count(), 0);
+    const expired = JSON.parse(await page.locator('#input').inputValue());
+    expired.candidate = structuredClone(expired.baseline);
+    expired.evidence[0].validUntil = expired.evidence[0].measuredAt;
+    await page.locator('#input').fill(JSON.stringify(expired));
+    await page.locator('#apply').click();
+    assert.equal(JSON.parse(await page.locator('#report').textContent()).tests[0].state, 'retest');
+    assert.ok(
+      (await page.locator('#table').textContent()).includes(message('testEvidenceExpired', locale)),
+    );
     const input = await page.locator('#input').inputValue();
     await page.locator('#locale').selectOption(locale === 'fr' ? 'es' : 'fr');
     await page.locator('#locale').selectOption(locale);

@@ -71,3 +71,7 @@ Decision tests and counterexamples, input validation, exit codes, hashes and no-
 Independent MIT alpha, not affiliated with Atomic Machines. Synthetic demo examples and evidence, no connected equipment or industrial API. Standalone repository; not published on npm.
 
 [Matter Compiler](https://www.atomicmachines.com/matter-compiler) · [PartCAD](https://github.com/partcad/partcad) · [Bluesky](https://blueskyproject.io/) · [OPC UA Job Management](https://reference.opcfoundation.org/specs/OPC-40001-3/full) · [QIF](https://www.nist.gov/publications/end-end-quality-information-framework-qif-technology-survey)
+
+## Evidence validity deadlines
+
+Evidence can declare `validUntil` (UTC ISO, no earlier than `measuredAt`). An expired latest pass requires a new measurement, without falling back to older evidence; a failure remains a failure after expiry. The deadline is inclusive. Without `validUntil`, no validity period is invented. `expiredEvidence` exposes affected IDs; physical authenticity is not guaranteed.

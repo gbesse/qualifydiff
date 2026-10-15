@@ -1,4 +1,9 @@
 export const translations = {
+  testEvidenceExpired: [
+    'Dernière preuve positive expirée : refaire l’essai.',
+    'Latest passing evidence has expired: rerun the test.',
+    'La última prueba positiva caducó: repita el ensayo.',
+  ],
   selectFile: ['Choisir un fichier', 'Choose a file', 'Elegir un archivo'],
   language: ['Langue', 'Language', 'Idioma'],
   settings: ['Votre expérience', 'Your experiment', 'Tu experimento'],

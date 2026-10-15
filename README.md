@@ -71,3 +71,7 @@ Tests de décisions et contre-exemples, validation des entrées, codes de sortie
 Alpha indépendante sous MIT, non affiliée à Atomic Machines. Exemples et preuves de démonstration synthétiques, aucun équipement ni API industrielle connecté. Dépôt autonome ; pas de publication npm.
 
 [Matter Compiler](https://www.atomicmachines.com/matter-compiler) · [PartCAD](https://github.com/partcad/partcad) · [Bluesky](https://blueskyproject.io/) · [OPC UA Job Management](https://reference.opcfoundation.org/specs/OPC-40001-3/full) · [QIF](https://www.nist.gov/publications/end-end-quality-information-framework-qif-technology-survey)
+
+## Dates de validité des preuves
+
+Une preuve peut déclarer `validUntil` (ISO UTC, après `measuredAt`). Le dernier résultat positif expiré exige une nouvelle mesure, sans retour à une preuve antérieure ; une défaillance demeure une défaillance même après expiration. La limite est inclusive. Sans `validUntil`, aucune durée de validité n’est inventée. `expiredEvidence` expose les ID concernés ; aucune authenticité physique n’est garantie.

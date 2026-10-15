@@ -85,3 +85,22 @@ test('timestamp precision is compared numerically, not lexicographically', () =>
   x.evidence[0].measuredAt = '2026-10-11T12:00:00.001Z';
   assert.throws(() => analyze(x));
 });
+
+test('expired latest pass requires retest and cannot fall back to older passes', () => {
+  const x = fixture();
+  x.candidate = structuredClone(x.baseline);
+  x.evidence[0].validUntil = x.evidence[0].measuredAt;
+  const result = analyze(x);
+  assert.equal(result.tests[0].state, 'retest');
+  assert.deepEqual(result.tests[0].expiredEvidence, [x.evidence[0].id]);
+  x.evidence.push({ ...x.evidence[0], id: 'expired-failure', result: 'fail' });
+  assert.equal(analyze(x).tests[0].state, 'failed');
+});
+test('passing evidence is valid at its deadline and invalid validity windows are refused', () => {
+  const x = fixture();
+  x.candidate = structuredClone(x.baseline);
+  x.evidence[0].validUntil = x.asOf;
+  assert.equal(analyze(x).status, 'pass');
+  x.evidence[0].validUntil = '2020-01-01T00:00:00Z';
+  assert.throws(() => analyze(x));
+});

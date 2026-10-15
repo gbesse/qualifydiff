@@ -71,3 +71,7 @@ Pruebas de decisiones y contraejemplos, validación de entrada, códigos de sali
 Alfa independiente bajo MIT, sin afiliación a Atomic Machines. Ejemplos y pruebas de demo sintéticos, sin equipos ni API industrial conectados. Repositorio autónomo; no publicado en npm.
 
 [Matter Compiler](https://www.atomicmachines.com/matter-compiler) · [PartCAD](https://github.com/partcad/partcad) · [Bluesky](https://blueskyproject.io/) · [OPC UA Job Management](https://reference.opcfoundation.org/specs/OPC-40001-3/full) · [QIF](https://www.nist.gov/publications/end-end-quality-information-framework-qif-technology-survey)
+
+## Plazos de validez de pruebas
+
+Una prueba puede declarar `validUntil` (ISO UTC, no anterior a `measuredAt`). El último resultado positivo caducado exige una medición nueva, sin recurrir a pruebas antiguas; un fallo sigue siendo fallo tras caducar. El límite es inclusivo. Sin `validUntil`, no inventa periodos de validez. `expiredEvidence` muestra ID afectados; no garantiza autenticidad física.

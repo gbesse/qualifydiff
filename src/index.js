@@ -60,7 +60,9 @@ export function analyze(input, { locale = 'fr' } = {}) {
         ['pass', 'fail'].includes(e.result) &&
         object(e.basis) &&
         iso(e.measuredAt) &&
-        Date.parse(e.measuredAt) <= Date.parse(input.asOf),
+        Date.parse(e.measuredAt) <= Date.parse(input.asOf) &&
+        (e.validUntil === undefined ||
+          (iso(e.validUntil) && Date.parse(e.validUntil) >= Date.parse(e.measuredAt))),
       locale,
     );
   const changedNodes = [...new Set([...a.map.keys(), ...b.map.keys()])].sort().filter((k) => {
@@ -88,9 +90,14 @@ export function analyze(input, { locale = 'fr' } = {}) {
     );
     const latest = candidates.reduce((at, e) => Math.max(at, Date.parse(e.measuredAt)), -Infinity);
     const fresh = candidates.filter((e) => Date.parse(e.measuredAt) === latest);
+    const expiredEvidence = fresh
+      .filter(
+        (e) => e.validUntil !== undefined && Date.parse(e.validUntil) < Date.parse(input.asOf),
+      )
+      .map((e) => e.id);
     const state = fresh.some((e) => e.result === 'fail')
       ? 'failed'
-      : fresh.length
+      : fresh.some((e) => !expiredEvidence.includes(e.id))
         ? 'retained'
         : 'retest';
     const staleEvidence = [...evidence.values()]
@@ -106,7 +113,9 @@ export function analyze(input, { locale = 'fr' } = {}) {
           ? 'evidenceCurrent'
           : state === 'failed'
             ? 'evidenceFailed'
-            : 'evidenceNeeded',
+            : expiredEvidence.length
+              ? 'testEvidenceExpired'
+              : 'evidenceNeeded',
         locale,
         { count: impacts.length },
         impacts.length,
@@ -120,6 +129,7 @@ export function analyze(input, { locale = 'fr' } = {}) {
       protocolChanged: !!prior && canonical(prior.protocol) !== canonical(t.protocol),
       evidence: fresh.map((e) => e.id),
       staleEvidence,
+      expiredEvidence,
       basis: currentBasis,
     });
   }
